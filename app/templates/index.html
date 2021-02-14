@@ -48,6 +48,7 @@
   </style>
 
   <script>
+      let addedPoint = false;
       var graphicsLayer;
       let addMarker = false;
 
@@ -60,6 +61,16 @@
 
   ], function(WebMap, MapView, Editor, Graphic, GraphicsLayer) {
 
+
+    // let long = parseFloat(document.getElementById('long').value);
+    // let lat = parseFloat(document.getElementById('lat').value);
+
+    let coords;
+    // if (!addedPoint)
+        coords = [-122.16996576136451, 37.42757670423654];
+    // else
+    //     coords = [long, lat];
+
     const webmap = new WebMap({
       portalItem: {
         id: "8b77ff1209a94a6da41d68ab4d8ea151"
@@ -68,8 +79,9 @@
 
     const view = new MapView({
       container: "viewDiv",
-      map: webmap
-
+      zoom: 10,
+      center: coords,
+      map: webmap,
     });
 
     graphicsLayer = new GraphicsLayer();
@@ -85,9 +97,6 @@
     view.ui.add(editor, "top-right");
 
     if (addMarker) {
-
-        let long = parseFloat(document.getElementById('long').value);
-        let lat = parseFloat(document.getElementById('lat').value);
 
         const point = { //Create a point
             type: "point",
@@ -115,6 +124,7 @@
 });
 
     function addPoint() {
+        addedPoint = true;
         addMarker = true;
         loadMap();
         
@@ -127,7 +137,7 @@
 
 <body>
   <div id="viewDiv">
-      <form action="javascript:void(0);" onsubmit="addPoint()">
+      <!-- <form action="javascript:void(0);" onsubmit="addPoint()">
           <div class="container">
               <label for="eName">Event name</label>
               <input type="text" placeholder="Name" required>
@@ -140,7 +150,7 @@
 
               <button type="submit">Add</button>
           </div>
-      </form>
+      </form> -->
   </div>
   <div id="editorDiv"></div>
 </body>

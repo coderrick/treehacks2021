@@ -91,6 +91,8 @@
             let text = document.getElementById('post').value;
             let post = `<div class="news"><h2>${title}</h2><p>${text}</p></div>`;
             document.getElementById('newsfeed').innerHTML += post;
+            document.getElementById('title').value = "";
+            document.getElementById('post').value = "";
             updateScroll();
         }
     </script>
