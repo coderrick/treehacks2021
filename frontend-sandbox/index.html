@@ -9,30 +9,7 @@
  <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.3.4/web3.min.js"></script>
  <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js" type="application/javascript"></script>
  <script src="https://js.arcgis.com/4.18/"></script>
- <script>
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    async function initMetamaskWallet() {
-      address = await window.ethereum.request({ method: 'eth_accounts' });
-      console.log("address= ", address)
-      console.log("signer= ", signer)
-      console.log("balance= ", ethers.utils.formatEther(await provider.getBalance("0x21f2e8dae878a481bd1451789f2b55d3ad527b63")));
-      r = await provider.getBalance("0x21f2e8dae878a481bd1451789f2b55d3ad527b63");
-      res = r.toString()
-      document.getElementById('addy').innerHTML = res;
-      console.log("made it")
-      return address;
-    }
-
-
-    function Send() {
-      const tx = signer.sendTransaction({
-        to: "0x462E8b591e33365B08994aC7439fd69a7bcED8b1",
-        value: ethers.utils.parseEther("1.0")
-
-      });
-    }
-  </script>
+ 
   <style>
     html,
     body,
