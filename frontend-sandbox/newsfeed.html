@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsfeed</title>
+
+    <style>
+        body {
+            margin: 16px;
+        }
+
+        div.newspage {
+            width: 99%;
+            margin: 20px;
+        }
+
+        #newsfeed {
+            overflow: auto;
+            width: auto;
+            height: 400px;
+            margin: 10px;
+            margin-top: 20px;
+        }
+
+
+        div.news {
+            background-color: #afdbf7;
+            margin: 10px;
+            padding: 16px 32px;
+            border-radius: 5px;
+        }
+
+        form {
+            margin-top: 50px;
+            border: black;
+            border-color: black;
+        }
+
+        #title, #post {
+            width: 98%;
+            margin-bottom: 10px;
+            margin-left: 6px;
+        }
+
+        #submit {
+            width: 99%;
+            margin: 5px;
+            padding: 10px 20px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <h1>Newsfeed</h1>
+
+    <div class="newspage">
+        <div id="newsfeed">
+            <div class="news">
+                <h2>News #1</h2>
+                <p>Hello this is news #1!</p>
+            </div>
+        
+            <div class="news">
+                <h2>News #2</h2>
+                <p>Hello this is news #2!</p>
+            </div>
+        </div>
+
+        <form action="javascript:void(0);" onsubmit="addPost()">
+            <input id="title" type="text" placeholder="Title" required>
+            <input id="post" type="text" placeholder="Type your post here!" required>
+            <button id="submit">Post!</button>
+        </form>
+    </div>
+    
+    <script>
+        let scrolled = false;
+        function updateScroll() {
+            if (!scrolled) {
+                let newsfeed = document.getElementById('newsfeed');
+                newsfeed.scrollTop = newsfeed.scrollHeight;
+            }
+        }
+
+        $('newsfeed').on('scroll', () => scrolled = true );
+
+        function addPost() {
+            let title = document.getElementById('title').value;
+            let text = document.getElementById('post').value;
+            let post = `<div class="news"><h2>${title}</h2><p>${text}</p></div>`;
+            document.getElementById('newsfeed').innerHTML += post;
+            updateScroll();
+        }
+    </script>
+</body>
+</html>
