@@ -6,3 +6,6 @@ def login(request):
 
 def index(request):
    return render(request, "index.html")
+
+def newsfeed(request):
+   return render(request, "newsfeed.html")

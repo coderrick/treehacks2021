@@ -5,7 +5,8 @@ from . import views
 urlpatterns = [
     url(r"^admin/", admin.site.urls),
     url(r"^$", views.login),
-    url(r"^index/$", views.index)
+    url(r"^index/$", views.index),
+    url(r"^newsfeed/$", views.fewsfeed),
     #url(r'^login/$', views.login),
 ]
 
