@@ -4,10 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Newsfeed</title>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.3.4/web3.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js" type="application/javascript"></script>
+    <script>
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        async function initMetamaskWallet() {
+          address = await window.ethereum.request({ method: 'eth_accounts' });
+          console.log("address= ", address)
+          console.log("signer= ", signer)
+          //console.log("balance= ", ethers.utils.formatEther(await provider.getBalance("0x21f2e8dae878a481bd1451789f2b55d3ad527b63")));
+          console.log("made it")
+          return address;
+        }
+        initMetamaskWallet();
+        function getAddress() {
+          initMetamaskWallet().then(function (result) {
+            console.log("result= ", result);
+            document.getElementById('addy').value = result;
+            //return result;
+          });
+    
+        }
+        function testSend() {
+          const tx = signer.sendTransaction({
+            to: "0x21F2e8DAe878a481BD1451789F2B55D3Ad527b63",
+            value: ethers.utils.parseEther("1.0")
+    
+          });
+        }
+    
+      </script>
     <style>
         body {
             margin: 16px;
+            font-family: Arial, Helvetica, sans-serif;
+            /* color:white; */
         }
 
         div.newspage {
@@ -18,7 +50,7 @@
         #newsfeed {
             overflow: auto;
             width: auto;
-            height: 400px;
+          
             margin: 10px;
             margin-top: 20px;
         }
@@ -48,27 +80,37 @@
             margin: 5px;
             padding: 10px 20px;
         }
-
+        button {
+  background-color: blue;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
 
     </style>
 </head>
 <body>
-    <h1>Newsfeed</h1>
+    <h1>Feed</h1>
 
     <div class="newspage">
         <div id="newsfeed">
             <div class="news">
-                <h2>News #1</h2>
-                <p>Hello this is news #1!</p>
+                <h2 >Food Drive</h2>
+                <p>We doing a food drive next week and need donations to buy supplies.</p>
+                <button type="button" class="cancelbtn" onclick="testSend()">Support</button>
             </div>
         
             <div class="news">
-                <h2>News #2</h2>
-                <p>Hello this is news #2!</p>
+                <h2>Clean up!</h2>
+                <p>We're cleaning up a vacant lot tomorrow and need cleaning supplies :)</p>
+                <button type="button" class="cancelbtn" onclick="testSend()">Support</button>
             </div>
         </div>
 
-        <form action="javascript:void(0);" onsubmit="addPost()">
+        <form action="javascript:void(0);" onsubmit="addPost()" style="">
             <input id="title" type="text" placeholder="Title" required>
             <input id="post" type="text" placeholder="Type your post here!" required>
             <button id="submit">Post!</button>
@@ -89,7 +131,7 @@
         function addPost() {
             let title = document.getElementById('title').value;
             let text = document.getElementById('post').value;
-            let post = `<div class="news"><h2>${title}</h2><p>${text}</p></div>`;
+            let post = `<div class="news"><h2>${title}</h2><p>${text}</p><button type="button" class="cancelbtn" onclick="testSend()">Support</button></div>`;
             document.getElementById('newsfeed').innerHTML += post;
             updateScroll();
         }

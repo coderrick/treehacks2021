@@ -100,6 +100,9 @@ span.psw {
       console.log("address= ", address)
       console.log("signer= ", signer)
       console.log("balance= ", ethers.utils.formatEther(await provider.getBalance("0x21f2e8dae878a481bd1451789f2b55d3ad527b63")));
+      r = await provider.getBalance("0x21f2e8dae878a481bd1451789f2b55d3ad527b63");
+      res = r.toString()
+      document.getElementById('addy').innerHTML = res;
       console.log("made it")
       return address;
     }

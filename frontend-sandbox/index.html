@@ -6,8 +6,33 @@
   <title>Edit features with the Editor widget | Sample | ArcGIS API for JavaScript 4.18</title>
 
  <link rel="stylesheet" href="https://js.arcgis.com/4.18/esri/themes/light-blue/main.css" />
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.3.4/web3.min.js"></script>
+ <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js" type="application/javascript"></script>
  <script src="https://js.arcgis.com/4.18/"></script>
+ <script>
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    async function initMetamaskWallet() {
+      address = await window.ethereum.request({ method: 'eth_accounts' });
+      console.log("address= ", address)
+      console.log("signer= ", signer)
+      console.log("balance= ", ethers.utils.formatEther(await provider.getBalance("0x21f2e8dae878a481bd1451789f2b55d3ad527b63")));
+      r = await provider.getBalance("0x21f2e8dae878a481bd1451789f2b55d3ad527b63");
+      res = r.toString()
+      document.getElementById('addy').innerHTML = res;
+      console.log("made it")
+      return address;
+    }
 
+
+    function Send() {
+      const tx = signer.sendTransaction({
+        to: "0x462E8b591e33365B08994aC7439fd69a7bcED8b1",
+        value: ethers.utils.parseEther("1.0")
+
+      });
+    }
+  </script>
   <style>
     html,
     body,
@@ -16,6 +41,7 @@
       margin: 0;
       height: 100%;
       width: 99%;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     .esri-editor .esri-item-list__scroller {
@@ -50,78 +76,124 @@
     width: 100px; 
     }
   </style>
+<script>
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    async function initMetamaskWallet() {
+      address = await window.ethereum.request({ method: 'eth_accounts' });
+      console.log("address= ", address)
+      console.log("signer= ", signer)
+      console.log("balance= ", ethers.utils.formatEther(await provider.getBalance("0x21f2e8dae878a481bd1451789f2b55d3ad527b63")));
+      console.log("made it")
+      r = await provider.getBalance("0x21f2e8dae878a481bd1451789f2b55d3ad527b63");
+      res = r.toString()
+      document.getElementById('s').innerHTML = res;
+      return address;
+    }
+    initMetamaskWallet();
+    function getAddress() {
+      initMetamaskWallet().then(function (result) {
+        console.log("result= ", result);
+        document.getElementById('addy').value = result;
+        //return result;
+      });
 
+    }
+    function testSend() {
+      const tx = signer.sendTransaction({
+        to: "0x462E8b591e33365B08994aC7439fd69a7bcED8b1",
+        value: ethers.utils.parseEther("1.0")
+
+      });
+    }
+
+  </script>
   <script>
-      var graphicsLayer;
-      let addMarker = false;
+require(["esri/Map", 
+               "esri/views/MapView", 
+               "esri/Graphic",
+               "esri/widgets/Search",
+               "esri/WebMap"], 
+              function(Map,
+                        MapView,
+                        Graphic,
+                        Search,
+                        WebMap) {
+        
+        const BUTTON_LEFT = 0;
+        const BUTTON_RIGHT = 2;
+        
+        /*** WEB MAP SET UP ***/
+        var map = new WebMap({
+          portalItem: {
+            id: "75f27ce8226641bbba948e58e7c14ea9"
+          }
+        });
+        
+        var view = new MapView({
+          center: [-84.6067, 43.4084], // long, lat
+          container: "viewDiv",
+          map: map,
+          zoom: 7,
+          popupEnabled: false
+        });
+        
+        /*** CUSTOM CLUSTERING
+          IDEA: 
+          Create 2 Layers:
+             1. at the state level
+             2. at the city level
+          For each layer, create a dataset for the coordinates for each field office (at the state level) and each city (for the city level).
+          Place markers there using ESRI.
+          Then, in REACT, add the data to them.
+         ***/
+         
+        /*** SEARCH WIDGET ***/
+        const searchWidget = new Search({
+          view: view
+        });
+        
+        searchWidget.on('select-result', function(e){
+          console.log("result selected");
+          console.log(e);
+        });
+        
+        view.ui.add(searchWidget, {
+          position: "top-left",
+          index: 2
+        });
+                
+           
+        /*** DROPPING PIN ***/
+        view.on("click", function(event){
+          if (event.button == BUTTON_LEFT) {
+            
+            var pointGraphic = createGraphic(event.mapPoint.latitude, event.mapPoint.longitude);
+          
+          view.graphics.add(pointGraphic);
+          }
+        });
 
-    const loadMap = () => require([
-    "esri/WebMap",
-    "esri/views/MapView",
-    "esri/widgets/Editor",
-    "esri/Graphic",
-    "esri/layers/GraphicsLayer"
-
-  ], function(WebMap, MapView, Editor, Graphic, GraphicsLayer) {
-
-    const webmap = new WebMap({
-      portalItem: {
-        id: "8b77ff1209a94a6da41d68ab4d8ea151"
-      }
-    });
-
-    const view = new MapView({
-      container: "viewDiv",
-      map: webmap
-
-    });
-
-    graphicsLayer = new GraphicsLayer();
-    webmap.add(graphicsLayer);
-
-    // Create the Editor
-    let editor = new Editor({
-            view: view,
-            allowedWorkFlows: ["add"]
-          });
-
-    // Add widget to top-right of the view
-    //view.ui.add(editor, "top-right");
-
-    if (addMarker) {
-
-        let long = parseFloat(document.getElementById('long').value);
-        let lat = parseFloat(document.getElementById('lat').value);
-
-        const point = { //Create a point
-            type: "point",
+        function createGraphic(lat, long){
+          var point = {
+            type: "point", // autocasts as new Point()
             longitude: long,
             latitude: lat
-        };
+          };
 
-        const simpleMarkerSymbol = {
-            type: "simple-marker",
-            color: [226, 119, 40],  // Orange
-            outline: {
-                color: [255, 255, 255], // White
-                width: 1
-            }
-        };
+          var markerSymbol = {
+            type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+            color: [242, 175, 81]
+          };
 
-       
-        addMarker = false;
-    }
+          var pointGraphic = new Graphic({
+            geometry: point,
+            symbol: markerSymbol
+          });
 
-});
-
-    function addPoint() {
-        addMarker = true;
-        loadMap();
-        
-    }
-
-    loadMap();
-
+          return pointGraphic;
+        }
+      });
   </script>
 </head>
 
@@ -133,21 +205,21 @@
             
             <img src="https://png.pngitem.com/pimgs/s/130-1300400_user-hd-png-download.png" alt="" srcset="">
             <p>Welcome back!</p>
-              <label for="eName">Event name</label>
-              <input type="text" placeholder="Name" required>
+            <P>ETH Balance: <span id ="s" style="color: blue;"></span></P>
+            
+             
 
-              <label for="Lat">Latitude</label>
-              <input id="lat" type="text" placeholder="Latitude" required>
+              <label for="Long">Comment:</label>
+              <input id="long" type="text" placeholder="Title" required>
+              <input id="long" type="text" placeholder="Leave a description" required>
 
-              <label for="Long">Longitude</label>
-              <input id="long" type="text" placeholder="Longitude" required>
-
-              <button type="submit">Add</button>
+              <button type="submit" onclick="Send()">Add comment</button>
               <button><a href="newsfeed.html">Explore Newsfeed</a></button>
           </div>
       </form>
   </div>
   <div id="editorDiv"></div>
+  
 </body>
 
 </html>

@@ -1,24 +1,24 @@
-pragma solidity 0.7.4;
-
-contract SocialNetwork{
+//contract SocialNetwork
     
-    address[] connections;
-    string[] posts;
+    (set connections)
+    (set posts)
     
-    struct User {
-        string username;
-        string accountWallet;
-    }
+    (User 
+      (string username;
+      (string accountWallet;
+      ok))
     
-    User u;
+    (User u)
     
-    function setUsername(string memory value) public{
-        u.username = value;
-    }
+    (setUsername(string memory value) 
+      (begin
+        (var set u.username 
+        (ok = value))))
     
-    function setAccountWallet(string memory value) public{
-        u.accountWallet = value;
-    }
+    (setAccountWallet(string memory value) 
+      (begin
+        (var set u.accountWallet 
+        (ok = value))))
     
     function setConnections(string memory value) public{
         connections.push(0xE6715b4Ff8cd51bb925213f066E87EC228966EC3);
