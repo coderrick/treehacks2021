@@ -1,24 +1,22 @@
-//contract SocialNetwork
+contract SocialNetwork{
     
-    (set connections)
-    (set posts)
+    address[] connections;
+    string[] posts;
     
-    (User 
-      (string username;
-      (string accountWallet;
-      ok))
+    struct User {
+        string username;
+        string accountWallet;
+    }
     
-    (User u)
+    User u;
     
-    (setUsername(string memory value) 
-      (begin
-        (var set u.username 
-        (ok = value))))
+    function setUsername(string memory value) public{
+        u.username = value;
+    }
     
-    (setAccountWallet(string memory value) 
-      (begin
-        (var set u.accountWallet 
-        (ok = value))))
+    function setAccountWallet(string memory value) public{
+        u.accountWallet = value;
+    }
     
     function setConnections(string memory value) public{
         connections.push(0xE6715b4Ff8cd51bb925213f066E87EC228966EC3);
