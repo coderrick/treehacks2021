@@ -89,20 +89,18 @@ span.psw {
     const signer = provider.getSigner();
     async function initMetamaskWallet() {
       address = await window.ethereum.request({ method: 'eth_accounts' });
-      initMetamaskWallet().then(function (result) {
-        document.getElementById('addy').value = result;
-      });
-      console.log("signer=", signer)
-      console.log("b = ", ethers.utils.formatEther(await provider.getBalance("0x21f2e8dae878a481bd1451789f2b55d3ad527b63")));
+      console.log("address= ", address)
+      console.log("signer= ", signer)
+      console.log("balance= ", ethers.utils.formatEther(await provider.getBalance("0x21f2e8dae878a481bd1451789f2b55d3ad527b63")));
       console.log("made it")
       return address;
     }
 
     function getAddress() {
       initMetamaskWallet().then(function (result) {
-        console.log(result);
+        console.log("result= ", result);
         document.getElementById('addy').value = result;
-        return result;
+        //return result;
       });
 
     }
